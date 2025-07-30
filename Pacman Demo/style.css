@@ -1,0 +1,566 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f0ff, #e8d5ff);
+    color: #8b5cf6;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.game-container {
+    text-align: center;
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.game-title {
+    margin-bottom: 25px;
+}
+
+.game-title h1 {
+    font-size: 48px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #fde047, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    margin: 0;
+    letter-spacing: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #6366f1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.lives-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lives-visual {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.life-icon {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at 30% 30%, #fde047, #eab308, #ca8a04);
+    border-radius: 50%;
+    clip-path: polygon(100% 50%, 20% 20%, 20% 80%);
+    position: relative;
+    box-shadow: 0 0 8px rgba(253, 224, 71, 0.6);
+    transition: all 0.3s ease;
+}
+
+.life-icon::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #000;
+    border-radius: 50%;
+    top: 6px;
+    left: 8px;
+}
+
+/* Add slight animation to life icons */
+.life-icon:hover {
+    transform: scale(1.1);
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(19, 20px);
+    grid-template-rows: repeat(21, 20px);
+    gap: 1px;
+    background: linear-gradient(135deg, #bfdbfe, #ddd6fe);
+    border: 3px solid #c7d2fe;
+    border-radius: 15px;
+    margin: 20px auto;
+    position: relative;
+    padding: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    justify-self: center;
+    width: fit-content;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+.wall {
+    background: linear-gradient(135deg, #a5b4fc, #c7d2fe);
+    border: 1px solid #a78bfa;
+    border-radius: 3px;
+}
+
+.path {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.dot {
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    border-radius: 2px;
+}
+
+.dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(45deg, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+.pacman {
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 10;
+    border-radius: 2px;
+}
+
+.pacman::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    background: radial-gradient(circle at 30% 30%, #fde047, #eab308, #ca8a04);
+    border-radius: 50%;
+    clip-path: polygon(100% 50%, 20% 20%, 20% 80%);
+    box-shadow: 0 0 15px rgba(253, 224, 71, 0.8);
+}
+
+/* Pac-Man Eye */
+.pacman .eye {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #000;
+    border-radius: 50%;
+    top: 35%;
+    left: 40%;
+    z-index: 11;
+}
+
+.pacman.up::after {
+    transform: translate(-50%, -50%) rotate(-90deg);
+    clip-path: polygon(50% 100%, 20% 20%, 80% 20%);
+}
+
+.pacman.up .eye {
+    top: 45%;
+    left: 35%;
+}
+
+.pacman.down::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    clip-path: polygon(50% 0%, 20% 80%, 80% 80%);
+}
+
+.pacman.down .eye {
+    top: 25%;
+    left: 35%;
+}
+
+.pacman.left::after {
+    transform: translate(-50%, -50%) rotate(180deg);
+    clip-path: polygon(0% 50%, 80% 20%, 80% 80%);
+}
+
+.pacman.left .eye {
+    top: 35%;
+    left: 25%;
+}
+
+.pacman.right::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+    clip-path: polygon(100% 50%, 20% 20%, 20% 80%);
+}
+
+.pacman.right .eye {
+    top: 35%;
+    left: 40%;
+}
+
+.ghost {
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 9;
+    border-radius: 2px;
+}
+
+.ghost::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.6);
+}
+
+.ghost::before {
+    content: '';
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 9px;
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    clip-path: polygon(0% 0%, 20% 100%, 40% 0%, 60% 100%, 80% 0%, 100% 100%, 100% 0%, 0% 0%);
+    z-index: 1;
+}
+
+/* Ghost Eyes */
+.ghost .eye-left,
+.ghost .eye-right {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    top: 40%;
+    z-index: 2;
+}
+
+.ghost .eye-left {
+    left: 35%;
+}
+
+.ghost .eye-right {
+    right: 35%;
+}
+
+.ghost .pupil-left,
+.ghost .pupil-right {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #1e40af;
+    border-radius: 50%;
+    top: 50%;
+    z-index: 3;
+}
+
+.ghost .pupil-left {
+    left: 37%;
+}
+
+.ghost .pupil-right {
+    right: 37%;
+}
+
+.ghost2 {
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 9;
+    border-radius: 2px;
+}
+
+.ghost2::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.6);
+}
+
+.ghost2::before {
+    content: '';
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 9px;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    clip-path: polygon(0% 0%, 20% 100%, 40% 0%, 60% 100%, 80% 0%, 100% 100%, 100% 0%, 0% 0%);
+    z-index: 1;
+}
+
+/* Ghost2 Eyes */
+.ghost2 .eye-left,
+.ghost2 .eye-right {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    top: 40%;
+    z-index: 2;
+}
+
+.ghost2 .eye-left {
+    left: 35%;
+}
+
+.ghost2 .eye-right {
+    right: 35%;
+}
+
+.ghost2 .pupil-left,
+.ghost2 .pupil-right {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #1e40af;
+    border-radius: 50%;
+    top: 50%;
+    z-index: 3;
+}
+
+.ghost2 .pupil-left {
+    left: 37%;
+}
+
+.ghost2 .pupil-right {
+    right: 37%;
+}
+
+.game-controls {
+    margin: 20px auto 0 auto;
+    font-size: 14px;
+    line-height: 1.8;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px 25px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #6366f1;
+    max-width: 500px;
+    width: 100%;
+}
+
+.game-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #c7d2fe;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 1000;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.game-message h2 {
+    color: #8b5cf6;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.game-message p {
+    color: #6366f1;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.game-message button {
+    background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    transition: all 0.3s ease;
+}
+
+.game-message button:hover {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Animation for Pac-Man chomping */
+@keyframes chomp {
+    0% {
+        clip-path: polygon(100% 50%, 20% 20%, 20% 80%);
+    }
+    50% {
+        clip-path: polygon(100% 50%, 50% 45%, 50% 55%);
+    }
+    100% {
+        clip-path: polygon(100% 50%, 20% 20%, 20% 80%);
+    }
+}
+
+@keyframes chomp-up {
+    0% {
+        clip-path: polygon(50% 100%, 20% 20%, 80% 20%);
+    }
+    50% {
+        clip-path: polygon(50% 100%, 45% 50%, 55% 50%);
+    }
+    100% {
+        clip-path: polygon(50% 100%, 20% 20%, 80% 20%);
+    }
+}
+
+@keyframes chomp-down {
+    0% {
+        clip-path: polygon(50% 0%, 20% 80%, 80% 80%);
+    }
+    50% {
+        clip-path: polygon(50% 0%, 45% 50%, 55% 50%);
+    }
+    100% {
+        clip-path: polygon(50% 0%, 20% 80%, 80% 80%);
+    }
+}
+
+@keyframes chomp-left {
+    0% {
+        clip-path: polygon(0% 50%, 80% 20%, 80% 80%);
+    }
+    50% {
+        clip-path: polygon(0% 50%, 50% 45%, 50% 55%);
+    }
+    100% {
+        clip-path: polygon(0% 50%, 80% 20%, 80% 80%);
+    }
+}
+
+.pacman.right::after {
+    animation: chomp 0.2s ease-in-out;
+}
+
+.pacman.left::after {
+    animation: chomp-left 0.2s ease-in-out;
+}
+
+.pacman.up::after {
+    animation: chomp-up 0.2s ease-in-out;
+}
+
+.pacman.down::after {
+    animation: chomp-down 0.2s ease-in-out;
+}
+
+/* Trigger chomp animation on movement */
+.pacman.chomping.right::after {
+    animation: chomp 0.2s ease-in-out;
+}
+
+.pacman.chomping.left::after {
+    animation: chomp-left 0.2s ease-in-out;
+}
+
+.pacman.chomping.up::after {
+    animation: chomp-up 0.2s ease-in-out;
+}
+
+.pacman.chomping.down::after {
+    animation: chomp-down 0.2s ease-in-out;
+}
+
+/* Ghost floating animation */
+@keyframes float {
+    0%, 100% {
+        transform: translate(-50%, -52%);
+    }
+    50% {
+        transform: translate(-50%, -48%);
+    }
+}
+
+.ghost::after {
+    animation: float 1s ease-in-out infinite;
+}
+
+.ghost::before {
+    animation: float 1s ease-in-out infinite;
+}
+
+.ghost2::after {
+    animation: float 1s ease-in-out infinite;
+}
+
+.ghost2::before {
+    animation: float 1s ease-in-out infinite;
+}
+
+/* Life loss animation */
+@keyframes loseLife {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0.7);
+        opacity: 0.3;
+    }
+}
+
+/* Life icon transition */
+.life-icon {
+    transition: all 0.3s ease;
+}
